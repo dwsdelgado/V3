@@ -1,0 +1,84 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import me from '@/data/me.json'
+import experience from '@/data/experience.json'
+import projects from '@/data/projects.json'
+import certifications from '@/data/certifications.json'
+---
+
+<Layout title={`Sobre mí — ${me.fullName}`} description={me.description}>
+  <h1 style='font-size: 1.5rem; margin-bottom: 1.5rem;'>Sobre mí</h1>
+
+  <p style='color: #374151; margin-bottom: 0.5rem;'>
+    {me.description}
+  </p>
+  <p style='color: #6b7280; font-size: 0.9375rem; margin-bottom: 2.5rem;'>
+    📍 {me.location} · Actualmente en <strong>{me.currentJob}</strong>
+  </p>
+
+  <!-- Experiencia -->
+  <div style='margin-bottom: 3rem;'>
+    <div class='home-section-header' style='margin-bottom: 1.25rem;'>
+      <h2>Experiencia</h2>
+    </div>
+    {experience.map((job: any) => (
+      <div style='margin-bottom: 1.75rem;'>
+        <div style='display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;'>
+          <strong style='font-size: 1rem;'>{job.company}</strong>
+          <span style='color: #9ca3af; font-size: 0.875rem;'>{job.startDate} – {job.endDate || 'Actualidad'}</span>
+        </div>
+        <div style='color: #6b7280; font-size: 0.9375rem; margin-bottom: 0.375rem;'>{job.position}</div>
+        {job.description && (
+          <p style='color: #4b5563; font-size: 0.9375rem; margin-bottom: 0;'>{job.description}</p>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <!-- Proyectos -->
+  <div style='margin-bottom: 3rem;'>
+    <div class='home-section-header' style='margin-bottom: 1.25rem;'>
+      <h2>Proyectos</h2>
+    </div>
+    {projects.map((project: any) => (
+      <div style='margin-bottom: 1.5rem;'>
+        <div style='display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;'>
+          <strong style='font-size: 1rem;'>{project.name}</strong>
+          {project.url && (
+            <a href={project.url} target='_blank' rel='noopener' style='font-size: 0.8125rem; color: #9ca3af;'>↗</a>
+          )}
+        </div>
+        {project.description && (
+          <p style='color: #4b5563; font-size: 0.9375rem; margin-bottom: 0.5rem;'>{project.description}</p>
+        )}
+        {project.tags && (
+          <div>
+            {project.tags.map((tag: string) => (
+              <span class='tag'>{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <!-- Certificaciones -->
+  <div style='margin-bottom: 3rem;'>
+    <div class='home-section-header' style='margin-bottom: 1.25rem;'>
+      <h2>Certificaciones</h2>
+    </div>
+    {certifications.map((cert: any) => (
+      <div style='display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6; flex-wrap: wrap; gap: 0.5rem;'>
+        <span style='font-size: 0.9375rem; font-weight: 500;'>{cert.name}</span>
+        <span style='color: #9ca3af; font-size: 0.875rem;'>{cert.issuer} · {cert.date}</span>
+      </div>
+    ))}
+  </div>
+
+  <!-- Links -->
+  <div style='margin-top: 2rem; display: flex; gap: 1.5rem; flex-wrap: wrap;'>
+    <a href={`https://github.com/${me.github}`} target='_blank' rel='noopener'>GitHub</a>
+    <a href={`https://linkedin.com/in/${me.linkedin}`} target='_blank' rel='noopener'>LinkedIn</a>
+    {me.cvUrl && <a href={me.cvUrl} target='_blank' rel='noopener'>Descargar CV</a>}
+  </div>
+</Layout>

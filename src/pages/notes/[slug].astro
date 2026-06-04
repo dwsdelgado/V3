@@ -1,0 +1,30 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getEntry, render } from 'astro:content'
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/notes')
+
+const note = await getEntry('notes', slug)
+if (!note) return Astro.redirect('/notes')
+
+const { Content } = await render(note)
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
+---
+
+<Layout title={`${note.data.title} — Darwin Delgado`}>
+  <h1 class='article-title'>{note.data.title}</h1>
+  <div class='article-meta'>
+    <time datetime={note.data.date.toISOString()}>{formatDate(note.data.date)}</time>
+    {note.data.tags.map((tag) => (
+      <span> · <span class='tag'>{tag}</span></span>
+    ))}
+  </div>
+  <div class='article-body'>
+    <Content />
+  </div>
+  <a href='/' class='back-link'>← inicio</a>
+</Layout>

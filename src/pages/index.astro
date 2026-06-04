@@ -1,19 +1,93 @@
 ---
-import Layout from '@/layouts/Layout.astro'
+import TerminalLayout from '@/layouts/TerminalLayout.astro'
 import me from '@/data/me.json'
-import AboutMe from '@/components/AboutMe.astro'
-import Experience from '@/components/Experience.astro'
-import Certifications from '@/components/Certifications.astro'
-import Projects from '@/components/Projects.astro'
-import Footer from '@/components/Footer.astro'
+import { getCollection } from 'astro:content'
+import fs from 'node:fs'
+import path from 'node:path'
 
-const title = me.fullName
+const user = me.github
+const host = 'www'
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+
+function statDate(relPath: string): Date {
+  try {
+    return fs.statSync(path.join(process.cwd(), relPath)).mtime
+  } catch {
+    return new Date()
+  }
+}
+
+function fmtLs(date: Date): string {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const m = months[date.getMonth()]
+  const d = String(date.getDate()).padStart(2, ' ')
+  const y = date.getFullYear()
+  return `${m} ${d}  ${y}`
+}
+
+interface Entry {
+  perms: string
+  links: number
+  size: number
+  date: Date
+  name: string
+  href: string
+  external?: boolean
+}
+
+const entries: Entry[] = [
+  {
+    perms: 'drwxr-xr-x',
+    links: 2,
+    size: 4096,
+    date: allPosts[0]?.data.date ?? statDate('src/pages/blog/index.astro'),
+    name: 'blog/',
+    href: '/blog',
+  },
+  {
+    perms: '-rw-r--r--',
+    links: 1,
+    size: 119137,
+    date: new Date('2024-03-22'),
+    name: 'darwin_delgado_cv.pdf',
+    href: '/cv.pdf',
+  },
+  {
+    perms: 'drwxr-xr-x',
+    links: 2,
+    size: 4096,
+    date: new Date('2024-02-01'),
+    name: 'github/',
+    href: `https://github.com/${user}`,
+    external: true,
+  },
+  {
+    perms: 'drwxr-xr-x',
+    links: 2,
+    size: 4096,
+    date: new Date('2024-02-01'),
+    name: 'linkedin/',
+    href: `https://www.linkedin.com/in/${me.linkedin}`,
+    external: true,
+  },
+]
+
+const total = 4
+
+function pad(n: number, width: number) {
+  return String(n).padStart(width, ' ')
+}
 ---
 
-<Layout title={title}>
-  <AboutMe />
-  <Experience />
-  <Projects />
-  <Certifications />
-  <Footer />
-</Layout>
+<TerminalLayout>
+  <pre><span>{user}@{host} ~ $ ls -l
+total {total}
+</span>{entries.map((e) => (
+<span>{e.perms}  {pad(e.links, 1)} {user} {user} {pad(e.size, 6)} {fmtLs(e.date)} <a href={e.href} target={e.external ? '_blank' : undefined} rel={e.external ? 'noopener noreferrer' : undefined}>{e.name}</a>
+</span>
+  ))}</pre>
+</TerminalLayout>

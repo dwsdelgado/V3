@@ -15,7 +15,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://auren.arthurmachado.dev',
+  site: 'https://www.darwindelgado.com',
   integrations: [
     icon({
       include: {

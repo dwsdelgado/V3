@@ -1,378 +1,200 @@
 @import 'tailwindcss';
 
-@plugin 'tailwindcss-animate';
-
-@custom-variant dark (&:is([data-theme="dark"] *));
-
-@theme {
-  --color-primary: hsl(var(--primary));
-  --color-primary-light: #4a5568;
-  --color-primary-dark: #1a202c;
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-light: #f7fafc;
-  --color-accent-dark: #cbd5e0;
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-stone-50: #fafafa;
-  --color-stone-100: #f4f4f5;
-  --color-stone-200: #e4e4e7;
-  --color-stone-300: #d4d4d8;
-  --color-stone-400: #a1a1aa;
-  --color-stone-500: #71717a;
-  --color-stone-600: #52525b;
-  --color-stone-700: #3f3f46;
-  --color-stone-800: #27272a;
-  --color-stone-900: #18181b;
-
-  --color-sage: #f8f9fa;
-  --color-sage-dark: #e9ecef;
-
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-
-  --color-chart-1: hsl(var(--chart-1));
-  --color-chart-2: hsl(var(--chart-2));
-  --color-chart-3: hsl(var(--chart-3));
-  --color-chart-4: hsl(var(--chart-4));
-  --color-chart-5: hsl(var(--chart-5));
-
-  --font-sans:
-    Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Helvetica Neue, Arial, sans-serif;
-  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-mono: SF Mono, Monaco, Inconsolata, Roboto Mono, monospace;
-
-  --color-violet-50: #f5f3ff;
-  --color-violet-100: #ede9fe;
-  --color-violet-200: #ddd6fe;
-  --color-violet-300: #c4b5fd;
-  --color-violet-400: #a78bfa;
-  --color-violet-500: #8b5cf6;
-  --color-violet-600: #7c3aed;
-  --color-violet-700: #6d28d9;
-  --color-violet-800: #5b21b6;
-  --color-violet-900: #4c1d95;
-
-  /* Brittany palette */
-  --color-navy: #0a192f;
-  --color-navy-light: #112240;
-  --color-navy-border: #233554;
-  --color-brit-text: #ccd6f6;
-  --color-brit-muted: #8892b0;
-  --color-brit-accent: #64ffda;
-
-  --text-xs: 0.75rem;
-  --text-xs--line-height: 1rem;
-  --text-sm: 0.875rem;
-  --text-sm--line-height: 1.25rem;
-  --text-base: 1rem;
-  --text-base--line-height: 1.5rem;
-  --text-lg: 1.125rem;
-  --text-lg--line-height: 1.75rem;
-  --text-xl: 1.25rem;
-  --text-xl--line-height: 1.75rem;
-  --text-2xl: 1.5rem;
-  --text-2xl--line-height: 2rem;
-  --text-3xl: 1.875rem;
-  --text-3xl--line-height: 2.25rem;
-  --text-4xl: 2.25rem;
-  --text-4xl--line-height: 2.5rem;
-
-  --tracking-tighter: -0.02em;
-  --tracking-tight: -0.01em;
-  --tracking-wide: 0.02em;
-
-  --animate-fade-in: fadeIn 0.6s ease-out;
-  --animate-slide-up: slideUp 0.6s ease-out;
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes slideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
-
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
-
-@utility card {
-  @apply bg-white/80 dark:bg-stone-800/40;
-  @apply border border-stone-200/80 dark:border-stone-700/60;
-  @apply rounded-2xl;
-  @apply shadow-sm hover:shadow-lg;
-  @apply transition-all duration-300;
-}
-
-@utility section-title {
-  font-family: var(--font-display);
-  @apply text-3xl md:text-4xl;
-  @apply font-bold;
-  @apply text-stone-900 dark:text-stone-100;
-  @apply tracking-tight;
-  @apply mb-2;
+/* Fuerza Georgia sobre el preflight de Tailwind v4 */
+:root {
+  --default-font-family: 'Lora', Georgia, serif;
+  --default-mono-font-family: 'Cascadia Code', 'SF Mono', Menlo, monospace;
 }
 
 @layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    font-family: 'Lora', Georgia, serif;
+  }
+
   body {
-    font-family: 'Inter Variable', system-ui, -apple-system, BlinkMacSystemFont;
-@apply antialiased leading-relaxed overflow-y-scroll;
-    background-color: #0f172a;
-    color: #94a3b8;
-  }
-
-  [data-theme="dark"] body {
-    background-color: #0f172a;
-    color: #94a3b8;
+    font-family: 'Lora', Georgia, serif;
+    background: #fff;
+    color: #111;
+    line-height: 1.7;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
   }
 
   a {
-    color: inherit;
-    transition: color 0.25s ease;
+    color: #1155cc;
   }
-
   a:hover {
-    color: #5eead4;
+    color: #1155cc;
+    text-decoration: underline;
   }
 
-  kbd {
-    @apply bg-stone-100 dark:bg-stone-800;
-    @apply text-stone-700 dark:text-stone-300;
-    @apply px-2 py-1 rounded-md text-xs font-mono border border-stone-200 dark:border-stone-700;
+  h1, h2, h3 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    line-height: 1.3;
+    margin: 0 0 0.5rem;
+    color: #111;
   }
 
-  button {
-    @apply cursor-pointer;
-    @apply text-stone-800 dark:text-stone-200;
+  p { margin: 0 0 1rem; }
+
+  :not(pre) > code {
+    font-family: 'Cascadia Code', 'SF Mono', Menlo, monospace;
+    font-size: 0.875em;
+    background: #f5f5f5;
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
   }
-  :root {
-    --background: 60, 5%, 96%;
-    --foreground: 20 14.3% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 20 14.3% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 14.3% 4.1%;
-    --primary: 24 9.8% 10%;
-    --primary-foreground: 60 9.1% 97.8%;
-    --secondary: 60 4.8% 95.9%;
-    --secondary-foreground: 24 9.8% 10%;
-    --muted: 60 4.8% 95.9%;
-    --muted-foreground: 25 5.3% 44.7%;
-    --accent: 60 4.8% 95.9%;
-    --accent-foreground: 24 9.8% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 20 5.9% 90%;
-    --input: 20 5.9% 90%;
-    --ring: 20 14.3% 4.1%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+
+  pre {
+    font-family: 'Cascadia Code', 'SF Mono', Menlo, monospace;
+    font-size: 0.875rem;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 1.25rem 1.5rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    line-height: 1.65;
   }
-  .dark {
-    --background: 20 14.3% 4.1%;
-    --foreground: 60 9.1% 97.8%;
-    --card: 20 14.3% 4.1%;
-    --card-foreground: 60 9.1% 97.8%;
-    --popover: 20 14.3% 4.1%;
-    --popover-foreground: 60 9.1% 97.8%;
-    --primary: 60 9.1% 97.8%;
-    --primary-foreground: 24 9.8% 10%;
-    --secondary: 12 6.5% 15.1%;
-    --secondary-foreground: 60 9.1% 97.8%;
-    --muted: 12 6.5% 15.1%;
-    --muted-foreground: 24 5.4% 63.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 60 9.1% 97.8%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 60 9.1% 97.8%;
-    --border: 12 6.5% 15.1%;
-    --input: 12 6.5% 15.1%;
-    --ring: 24 5.7% 82.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+  pre code {
+    background: none;
+    padding: 0;
+    font-size: inherit;
   }
+
+  blockquote {
+    border-left: 3px solid #ccc;
+    margin: 1.5rem 0;
+    padding: 0 1rem;
+    color: #555;
+  }
+
+  hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+
+  ul, ol { padding-left: 1.5rem; margin: 0 0 1rem; }
+  li { margin-bottom: 0.25rem; }
 }
 
-@layer utilities {
-  .animate {
-    @apply opacity-0 translate-y-4;
-    @apply transition-[opacity,_translate] duration-700 ease-out;
-  }
-
-  .animate.show {
-    @apply opacity-100 translate-y-0;
-  }
-
-  html[data-theme='dark'] {
-    color-scheme: dark;
-  }
-
-  .print {
-    font-family: 'Inter', sans-serif !important;
-    display: none !important;
-  }
-
-  @media print {
-    .print {
-      display: block !important;
-    }
-
-    .no-print {
-      display: none !important;
-    }
-
-    @page {
-      size: auto !important;  
-      margin: 5mm !important;
-    }
-  }
-
-  /* Custom scrollbar */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-stone-300;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-stone-400;
-    @apply rounded-md;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-stone-400;
-  }
-
-  /* Dark mode scrollbar */
-  [data-theme="dark"] ::-webkit-scrollbar-track {
-    @apply bg-stone-800;
-  }
-
-  [data-theme="dark"] ::-webkit-scrollbar-thumb {
-    @apply bg-stone-600;
-  }
-
-  [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
-    @apply bg-stone-500;
-  }
-
-  /* Selection */
-  ::selection {
-    @apply bg-stone-300 dark:bg-stone-700;
-    @apply text-stone-900 dark:text-stone-100;
-  }
-
-  /* Custom Tooltip - Mobile Friendly */
-  .tooltip {
-    @apply relative inline-block;
-  }
-
-  .tooltip .tooltip-content {
-    @apply invisible absolute z-50;
-    @apply bg-stone-800 dark:bg-stone-200;
-    @apply text-stone-100 dark:text-stone-800;
-    @apply text-xs px-2 py-1;
-    @apply rounded-md shadow-lg;
-    @apply whitespace-nowrap;
-    @apply opacity-0 transition-opacity duration-200;
-    @apply pointer-events-none;
-    @apply shadow-2xl;
-    bottom: 125%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .tooltip .tooltip-content::after {
-    content: "";
-    @apply absolute top-full left-1/2;
-    @apply border-4 border-transparent;
-    @apply border-t-stone-800 dark:border-t-stone-200;
-    transform: translateX(-50%);
-  }
-
-  /* Show tooltip on hover (desktop) and focus (mobile) */
-  .tooltip:hover .tooltip-content,
-  .tooltip:focus .tooltip-content,
-  .tooltip:focus-within .tooltip-content {
-    @apply visible opacity-100;
-  }
-
-  /* Mobile-specific: show tooltip on touch/tap */
-  @media (hover: none) and (pointer: coarse) {
-    .tooltip {
-      @apply cursor-pointer;
-    }
-    
-    /* Use active state for mobile taps */
-    .tooltip:active .tooltip-content {
-      @apply visible opacity-100;
-    }
-  }
+/* ── Page wrapper ── */
+.page {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* ── Top nav ── */
+.topnav {
+  text-align: right;
+  margin-bottom: 3rem;
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  color: #111;
+}
+.topnav a {
+  color: #111;
+  text-decoration: none;
+}
+.topnav a:hover { text-decoration: underline; }
+.nav-name { font-weight: bold; }
+
+/* ── Post list (dates + titles) ── */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.post-item {
+  display: flex;
+  gap: 1.25rem;
+  align-items: baseline;
+  margin-bottom: 0.2rem;
+}
+
+.post-item .post-date {
+  font-family: 'Cascadia Code', 'SF Mono', Menlo, monospace;
+  font-size: 0.8125rem;
+  color: #888;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 7rem;
+}
+
+.post-item a {
+  font-size: 1rem;
+}
+
+/* ── Favorite posts (title: description) ── */
+.featured-post {
+  margin-bottom: 0.4rem;
+}
+.featured-post .fp-title {
+  color: #888;
+  text-decoration: none;
+}
+.featured-post .fp-title:hover {
+  color: #1155cc;
+  text-decoration: underline;
+}
+
+/* ── Section headings ── */
+.section-heading {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 1rem 0 0.25rem;
+}
+
+/* ── Intro text ── */
+.intro-bold {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+/* ── Article ── */
+.article-title {
+  font-size: 1.75rem;
+  margin-bottom: 0.375rem;
+}
+.article-meta {
+  color: #888;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  font-family: Georgia, serif;
+}
+.article-meta .tag {
+  color: #555;
+  font-style: italic;
+}
+.article-body h2 { font-size: 1.25rem; margin: 2rem 0 0.5rem; }
+.article-body h3 { font-size: 1.0625rem; margin: 1.5rem 0 0.375rem; }
+.article-body p { line-height: 1.75; }
+
+/* ── Back link ── */
+.back-link {
+  display: block;
+  margin-top: 3rem;
+  color: #888;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+.back-link:hover { text-decoration: underline; color: #1155cc; }
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .post-item { flex-direction: column; gap: 0; }
+  .post-item .post-date { min-width: unset; }
+}
+
+/* Fuera de cualquier layer — gana siempre sobre Tailwind preflight */
+html, body, p, li, a, span, div, h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lora', Georgia, serif;
+}
+pre, code, .post-date {
+  font-family: 'Cascadia Code', 'SF Mono', Menlo, 'Courier New', monospace;
 }

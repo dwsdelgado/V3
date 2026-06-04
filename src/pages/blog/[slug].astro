@@ -1,0 +1,125 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro'
+import { getEntry, render } from 'astro:content'
+
+const { slug } = Astro.params
+if (!slug) return Astro.redirect('/blog')
+
+const post = await getEntry('blog', slug) ?? await getEntry('blog', slug + '.md')
+if (!post || post.data.draft) return Astro.redirect('/blog')
+
+const { Content } = await render(post)
+
+const kvKey = `views:${slug}`
+const kv: KVNamespace | undefined = (Astro.locals as any)?.runtime?.env?.KV
+
+let views = 0
+if (kv) {
+  const current = await kv.get(kvKey)
+  views = current ? parseInt(current) + 1 : 1
+  await kv.put(kvKey, views.toString())
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+function timeAgo(date: Date): string {
+  const years = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24 * 365))
+  const months = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24 * 30))
+  if (years >= 1) return `${years}y ago`
+  if (months >= 1) return `${months}mo ago`
+  return 'recently'
+}
+
+function fmtViews(n: number) {
+  return n.toLocaleString('en-US')
+}
+---
+
+<BlogLayout title={`${post.data.title} — Darwin Delgado`} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <div class='meta'>
+      <span class='meta-left'>
+        <span class='author'>@dwsdelgado</span>
+        <span class='sep'>|</span>
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+        <span class='ago'>({timeAgo(post.data.date)})</span>
+      </span>
+      {views > 0 && (
+        <span class='meta-views'>{fmtViews(views)} views</span>
+      )}
+    </div>
+    <div class='body'>
+      <Content />
+    </div>
+    <footer class='post-footer'>
+      <span>Darwin Delgado (<a href='https://github.com/dwsdelgado' target='_blank' rel='noopener'>@dwsdelgado</a>)</span>
+      {post.data.github_source && (
+        <a href={post.data.github_source} target='_blank' rel='noopener' class='source-link'>Source</a>
+      )}
+    </footer>
+  </article>
+</BlogLayout>
+
+<style>
+  article { color: #ccc; }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+  }
+
+  .meta-left {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .sep { color: #444; }
+  .ago { color: #555; }
+
+  .meta-views {
+    color: #666;
+    white-space: nowrap;
+  }
+
+  .body :global(p) { margin-bottom: 1.25rem; line-height: 1.75; }
+  .body :global(h2) { font-size: 1.125rem; font-weight: 600; color: #fff; margin: 2rem 0 0.75rem; }
+  .body :global(h3) { font-size: 1rem; font-weight: 600; color: #ddd; margin: 1.5rem 0 0.5rem; }
+  .body :global(a) { color: #7eb8f7; text-decoration: underline; }
+  .body :global(code) { font-family: monospace; font-size: 0.875em; background: #1e1e1e; padding: 0.1em 0.35em; border-radius: 3px; }
+  .body :global(pre) { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 1.25rem; border-radius: 6px; overflow-x: auto; margin: 1.5rem 0; }
+  .body :global(pre code) { background: none; padding: 0; }
+  .body :global(ul), .body :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+  .body :global(li) { margin-bottom: 0.25rem; }
+  .body :global(blockquote) { border-left: 2px solid #333; padding-left: 1rem; color: #888; margin: 1.5rem 0; }
+
+  .post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #2a2a2a;
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  .post-footer a { color: #666; text-decoration: none; }
+  .post-footer a:hover { color: #aaa; }
+  .source-link { text-decoration: underline !important; }
+</style>

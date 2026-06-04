@@ -2,3 +2,7 @@ name = "auren-portfolio"
 compatibility_date = "2025-04-30"
 pages_build_output_dir = "dist"
 compatibility_flags = [ "nodejs_compat" ]
+
+[[kv_namespaces]]
+binding = "KV"
+id = "REPLACE_WITH_YOUR_KV_ID"

@@ -1,83 +1,51 @@
 ---
-import '@fontsource-variable/inter'
 import '@/styles/global.css'
-import Sidebar from '@/components/ui/Sidebar.astro'
-import MobileNav from '@/components/ui/MobileNav.astro'
-import MobileHeader from '@/components/ui/MobileHeader.astro'
-import ParticlesBackground from '@/components/ui/ParticlesBackground.astro'
 import me from '@/data/me.json'
-import { HTMLtoText } from '@/utils'
 
-const { title } = Astro.props
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = me.description } = Astro.props
 ---
 
 <!doctype html>
-<html lang='es' class='scroll-smooth antialiased'>
-	<head>
-		<meta charset='UTF-8' />
-		<meta name='description' content={HTMLtoText(me.description)} />
-		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
-		<link rel='icon' type='image/png' href='/favicon.png' />
-		<link rel='sitemap' href='/sitemap-index.xml' />
-		<meta name='generator' content={Astro.generator} />
-		<title>{title}</title>
-		<meta name='robots' content='index, follow' />
-
-		<meta property='og:type' content='website' />
-		<meta property='og:title' content={title} />
-		<meta property='og:description' content={HTMLtoText(me.description)} />
-		<meta property='og:image' content='/favicon.png' />
-		<meta property='og:locale' content='es_CO' />
-
-		<meta name='twitter:card' content='summary_large_image' />
-		<meta name='twitter:title' content={title} />
-		<meta name='twitter:description' content={HTMLtoText(me.description)} />
-
-		<meta name='author' content={me.fullName} />
-		<meta name='keywords' content='DevOps, Infrastructure Engineer, Linux, Red Hat, Ansible, Docker, Kubernetes, AWS, Cloud' />
-
-
-		<!-- Google Fonts: Fraunces -->
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet" />
-
-		<!-- Iconify -->
-		<script src="https://code.iconify.design/iconify-icon/2.1.0/iconify-icon.min.js"></script>
-
-		<script is:inline>
-			// Siempre dark por defecto — limpiar preferencia anterior
-			localStorage.theme = 'dark'
-			document.documentElement.dataset.theme = 'dark'
-		</script>
-
-		<script>
-			document.addEventListener('DOMContentLoaded', () => {
-				document.body.classList.add('!visible')
-			})
-		</script>
-	</head>
-	<body class="invisible">
-		<!-- Spotlight cursor (igual que brittanychiang.com) -->
-		<div id="spotlight" class="pointer-events-none fixed inset-0 z-30 transition duration-300" style="background: radial-gradient(600px circle at 50% 50%, rgba(29,78,216,0.10), transparent 80%)"></div>
-		<script is:inline>
-			document.addEventListener('mousemove', (e) => {
-				const el = document.getElementById('spotlight')
-				if (el) el.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(29,78,216,0.10), transparent 80%)`
-			})
-		</script>
-		<div class='no-print'>
-			<div class="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-16 lg:py-0">
-				<div class="lg:flex lg:justify-between lg:gap-4">
-					<Sidebar />
-					<main id="content" class="pt-2 pb-28 lg:pb-0 lg:w-[52%] lg:py-24 relative">
-						<ParticlesBackground />
-						<slot />
-					</main>
-				</div>
-			</div>
-		<MobileHeader />
-		<MobileNav />
-		</div>
-	</body>
+<html lang='es'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta name='description' content={description} />
+    <link rel='icon' type='image/png' href='/favicon.png' />
+    <link rel='sitemap' href='/sitemap-index.xml' />
+    <meta name='generator' content={Astro.generator} />
+    <title>{title}</title>
+    <meta name='robots' content='index, follow' />
+    <meta name='author' content={me.fullName} />
+    <meta property='og:title' content={title} />
+    <meta property='og:description' content={description} />
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link href='https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap' rel='stylesheet' />
+    <style>
+      * { font-family: 'Lora', Georgia, serif !important; }
+      pre, code, .post-date { font-family: 'JetBrains Mono', 'SF Mono', monospace !important; }
+    </style>
+  </head>
+  <body>
+    <div class='page'>
+      <nav class='topnav'>
+        <a href='/' class='nav-name'>{me.name.toLowerCase()}</a>
+        {' — '}
+        <a href='/blog'>blog</a>
+        {' — '}
+        <a href='/notes'>notas</a>
+        {' — '}
+        <a href='/about'>sobre mí</a>
+      </nav>
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
 </html>

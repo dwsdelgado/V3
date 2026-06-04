@@ -1,0 +1,85 @@
+---
+import BlogLayout from '@/layouts/BlogLayout.astro'
+import { getCollection } from 'astro:content'
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+const byYear = posts.reduce<Record<string, typeof posts>>((acc, post) => {
+  const year = post.data.date.getFullYear().toString()
+  if (!acc[year]) acc[year] = []
+  acc[year].push(post)
+  return acc
+}, {})
+
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a))
+
+const kv: KVNamespace | undefined = (Astro.locals as any)?.runtime?.env?.KV
+
+const viewsMap: Record<string, number> = {}
+if (kv) {
+  await Promise.all(posts.map(async (post) => {
+    const slug = post.id.replace(/\.mdx?$/, '')
+    const v = await kv.get(`views:${slug}`)
+    viewsMap[slug] = v ? parseInt(v) : 0
+  }))
+}
+
+function fmtViews(n: number) {
+  return n.toLocaleString('en-US')
+}
+---
+
+<BlogLayout title='Blog — Darwin Delgado'>
+  <div class='list'>
+    {years.map((year) => (
+      byYear[year].map((post, i) => {
+        const slug = post.id.replace(/\.mdx?$/, '')
+        const views = viewsMap[slug] ?? 0
+        return (
+          <div class='row'>
+            <span class='year'>{i === 0 ? year : ''}</span>
+            <a class='title' href={`/blog/${slug}`}>{post.data.title}</a>
+            <span class='views'>{views > 0 ? fmtViews(views) : ''}</span>
+          </div>
+        )
+      })
+    ))}
+  </div>
+</BlogLayout>
+
+<style>
+  .list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    align-items: baseline;
+    gap: 0 1rem;
+    padding: 0.45rem 0;
+  }
+
+  .year {
+    font-size: 0.8rem;
+    color: #555;
+    text-align: left;
+  }
+
+  .title {
+    font-size: 0.9375rem;
+    color: #ccc;
+    text-decoration: none;
+  }
+
+  .title:hover { color: #fff; }
+
+  .views {
+    font-size: 0.8rem;
+    color: #555;
+    text-align: right;
+    white-space: nowrap;
+  }
+</style>

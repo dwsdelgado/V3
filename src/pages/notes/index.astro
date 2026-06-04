@@ -1,0 +1,47 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getCollection } from 'astro:content'
+
+const notes = (await getCollection('notes'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric' })
+}
+
+const byYear = notes.reduce<Record<string, typeof notes>>((acc, note) => {
+  const year = note.data.date.getFullYear().toString()
+  if (!acc[year]) acc[year] = []
+  acc[year].push(note)
+  return acc
+}, {})
+
+const years = Object.keys(byYear).sort((a, b) => Number(b) - Number(a))
+---
+
+<Layout title='Notas — Darwin Delgado' description='Notas cortas, TIL y apuntes del día a día.'>
+  <h1 style='font-size: 1.5rem; margin-bottom: 0.5rem;'>Notas</h1>
+  <p style='color: #6b7280; margin-bottom: 2.5rem;'>
+    TIL, apuntes rápidos y cosas que aprendo en el día a día trabajando con infraestructura.
+  </p>
+
+  {years.map((year) => (
+    <div class='home-section'>
+      <div class='home-section-header'>
+        <h2>{year}</h2>
+      </div>
+      <ul class='post-list'>
+        {byYear[year].map((note) => (
+          <li class='post-item'>
+            <a href={`/notes/${note.id}`}>{note.data.title}</a>
+            <span class='post-date'>{formatDate(note.data.date)}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+
+  {notes.length === 0 && (
+    <p style='color: #9ca3af;'>Pronto habrá notas aquí.</p>
+  )}
+</Layout>

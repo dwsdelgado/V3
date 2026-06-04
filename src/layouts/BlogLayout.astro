@@ -1,0 +1,87 @@
+---
+import me from '@/data/me.json'
+
+interface Props {
+  title?: string
+  description?: string
+}
+const { title = me.fullName, description = me.description } = Astro.props
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content={me.fullName} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <a href="/blog" class="site-name">{me.fullName}</a>
+        <nav>
+          <a href="/blog">Blog</a>
+          <a href={`https://github.com/${me.github}`} target="_blank" rel="noopener">GitHub</a>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: #1a1a1a;
+    color: #ccc;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .wrapper {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 3.5rem;
+  }
+
+  .site-name {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  nav a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.875rem;
+  }
+
+  nav a:hover {
+    color: #ccc;
+  }
+</style>
