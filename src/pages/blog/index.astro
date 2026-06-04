@@ -94,4 +94,9 @@ function fmtViews(n: number) {
     text-align: right;
     white-space: nowrap;
   }
+
+  @media (max-width: 600px) {
+    .row { grid-template-columns: 2.5rem 1fr; }
+    .views { display: none; }
+  }
 </style>

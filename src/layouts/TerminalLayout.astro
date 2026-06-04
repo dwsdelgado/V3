@@ -34,6 +34,11 @@ const { title = me.fullName } = Astro.props
         font-family: inherit;
         font-size: inherit;
         white-space: pre;
+        overflow-x: auto;
+      }
+
+      @media (max-width: 600px) {
+        body { font-size: 11px; margin: 6px; }
       }
     </style>
   </head>
