@@ -113,6 +113,8 @@ function fmtViews(n: number) {
   .body :global(ul), .body :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
   .body :global(li) { margin-bottom: 0.25rem; }
   .body :global(blockquote) { border-left: 2px solid #333; padding-left: 1rem; color: #888; margin: 1.5rem 0; }
+  .body :global(img) { max-width: 100%; border-radius: 6px; margin: 1.5rem 0; display: block; }
+  .body :global(img + em) { display: block; text-align: center; font-size: 0.8rem; color: #666; margin-top: -1rem; }
 
   .body :global(.copy-btn) {
     position: absolute;

@@ -8,6 +8,9 @@ draft: false
 
 Llevaba tiempo queriendo documentar cómo armé el CDN de este sitio. Todo está manejado con Terraform y corre en AWS. Acá va el proceso.
 
+![Arquitectura del CDN](/images/ssm-ec2-arquitectura.png)
+*Arquitectura: S3 → CloudFront → WAF → usuario final*
+
 ## El problema
 
 Tenía un bucket S3 con activos estáticos, pero servir directo desde S3 tiene varios problemas: latencia, sin HTTPS propio, sin control de caché, sin WAF.
