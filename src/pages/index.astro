@@ -2,23 +2,12 @@
 import TerminalLayout from '@/layouts/TerminalLayout.astro'
 import me from '@/data/me.json'
 import { getCollection } from 'astro:content'
-import fs from 'node:fs'
-import path from 'node:path'
 
 const user = me.github
 const host = 'www'
 
 const allPosts = (await getCollection('blog', ({ data }) => !data.draft))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-
-
-function statDate(relPath: string): Date {
-  try {
-    return fs.statSync(path.join(process.cwd(), relPath)).mtime
-  } catch {
-    return new Date()
-  }
-}
 
 function fmtLs(date: Date): string {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -44,7 +33,7 @@ const entries: Entry[] = [
     perms: 'drwxr-xr-x',
     links: 2,
     size: 4096,
-    date: allPosts[0]?.data.date ?? statDate('src/pages/blog/index.astro'),
+    date: allPosts[0]?.data.date ?? new Date('2026-06-01'),
     name: 'blog/',
     href: '/blog',
   },
