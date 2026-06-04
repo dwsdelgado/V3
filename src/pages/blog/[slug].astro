@@ -20,16 +20,24 @@ if (kv) {
   await kv.put(kvKey, views.toString())
 }
 
+const wordCount = post.body?.split(/\s+/).filter(Boolean).length ?? 0
+const readingTime = Math.max(1, Math.ceil(wordCount / 200))
+
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
 function timeAgo(date: Date): string {
-  const years = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24 * 365))
-  const months = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24 * 30))
+  const diff = Date.now() - date.getTime()
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+  const weeks = Math.floor(days / 7)
+  const months = Math.floor(days / 30)
+  const years = Math.floor(days / 365)
   if (years >= 1) return `${years}y ago`
   if (months >= 1) return `${months}mo ago`
-  return 'recently'
+  if (weeks >= 1) return `${weeks}w ago`
+  if (days >= 1) return `${days}d ago`
+  return 'today'
 }
 
 function fmtViews(n: number) {
@@ -46,6 +54,8 @@ function fmtViews(n: number) {
         <span class='sep'>|</span>
         <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
         <span class='ago'>({timeAgo(post.data.date)})</span>
+        <span class='sep'>·</span>
+        <span>{readingTime} min read</span>
       </span>
       {views > 0 && (
         <span class='meta-views'>{fmtViews(views)} views</span>
@@ -79,7 +89,7 @@ function fmtViews(n: number) {
     justify-content: space-between;
     align-items: center;
     font-size: 0.8rem;
-    color: #666;
+    color: #888;
     margin-bottom: 2.5rem;
   }
 
@@ -89,24 +99,37 @@ function fmtViews(n: number) {
     gap: 0.4rem;
   }
 
-  .sep { color: #444; }
-  .ago { color: #555; }
-
-  .meta-views {
-    color: #666;
-    white-space: nowrap;
-  }
+  .sep { color: #555; }
+  .ago { color: #777; }
+  .meta-views { color: #888; white-space: nowrap; }
 
   .body :global(p) { margin-bottom: 1.25rem; line-height: 1.75; }
   .body :global(h2) { font-size: 1.125rem; font-weight: 600; color: #fff; margin: 2rem 0 0.75rem; }
   .body :global(h3) { font-size: 1rem; font-weight: 600; color: #ddd; margin: 1.5rem 0 0.5rem; }
   .body :global(a) { color: #7eb8f7; text-decoration: underline; }
   .body :global(code) { font-family: monospace; font-size: 0.875em; background: #1e1e1e; padding: 0.1em 0.35em; border-radius: 3px; }
-  .body :global(pre) { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 1.25rem; border-radius: 6px; overflow-x: auto; margin: 1.5rem 0; }
+  .body :global(pre) { position: relative; background: #1a1a1a; border: 1px solid #2a2a2a; padding: 1.25rem; border-radius: 6px; overflow-x: auto; margin: 1.5rem 0; }
   .body :global(pre code) { background: none; padding: 0; }
   .body :global(ul), .body :global(ol) { padding-left: 1.5rem; margin-bottom: 1.25rem; }
   .body :global(li) { margin-bottom: 0.25rem; }
   .body :global(blockquote) { border-left: 2px solid #333; padding-left: 1rem; color: #888; margin: 1.5rem 0; }
+
+  .body :global(.copy-btn) {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    background: transparent;
+    border: none;
+    color: #555;
+    font-size: 0.65rem;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: color 0.15s;
+  }
+  .body :global(.copy-btn:hover) { color: #aaa; }
+  .body :global(.copy-btn.copied) { color: #6ee7b7; }
 
   .post-footer {
     display: flex;
@@ -114,12 +137,31 @@ function fmtViews(n: number) {
     align-items: center;
     margin-top: 4rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #2a2a2a;
+    border-top: 1px solid #333;
     font-size: 0.8rem;
-    color: #666;
+    color: #888;
   }
 
-  .post-footer a { color: #666; text-decoration: none; }
-  .post-footer a:hover { color: #aaa; }
+  .post-footer a { color: #888; text-decoration: none; }
+  .post-footer a:hover { color: #ccc; }
   .source-link { text-decoration: underline !important; }
 </style>
+
+<script>
+  document.querySelectorAll('.body pre').forEach((pre) => {
+    const btn = document.createElement('button')
+    btn.className = 'copy-btn'
+    btn.textContent = 'Copy'
+    btn.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.innerText ?? ''
+      await navigator.clipboard.writeText(code)
+      btn.textContent = 'Copied!'
+      btn.classList.add('copied')
+      setTimeout(() => {
+        btn.textContent = 'Copy'
+        btn.classList.remove('copied')
+      }, 2000)
+    })
+    pre.appendChild(btn)
+  })
+</script>

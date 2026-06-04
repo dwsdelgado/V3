@@ -20,14 +20,14 @@ const { title = me.fullName, description = me.description } = Astro.props
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+    <div class="scroll-progress" id="scroll-progress"></div>
     <div class="wrapper">
       <header>
         <a href="/blog" class="site-name">{me.fullName}</a>
         <nav>
-          <a href="/blog">Blog</a>
           <a href={`https://github.com/${me.github}`} target="_blank" rel="noopener">GitHub</a>
         </nav>
       </header>
@@ -50,24 +50,28 @@ const { title = me.fullName, description = me.description } = Astro.props
     min-height: 100vh;
   }
 
+
   .wrapper {
-    max-width: 540px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem 4rem;
+    max-width: 680px;
+    margin: 1.5rem auto;
+    padding: 2rem 2rem 4rem;
+    border: 1px solid #2e2e2e;
+    border-radius: 8px;
   }
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 3.5rem;
+    margin-bottom: 2rem;
   }
 
   .site-name {
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1.3rem;
     color: #fff;
     text-decoration: none;
+    letter-spacing: -0.02em;
   }
 
   nav {
@@ -84,4 +88,36 @@ const { title = me.fullName, description = me.description } = Astro.props
   nav a:hover {
     color: #ccc;
   }
+
+  /* Scroll progress */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: #555;
+    z-index: 9999;
+    transition: width 0.1s linear;
+  }
+
+  /* Fade-in */
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .wrapper {
+    animation: fadein 0.35s ease forwards;
+  }
 </style>
+
+<script>
+  const bar = document.getElementById('scroll-progress')
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      const pct = total > 0 ? (window.scrollY / total) * 100 : 0
+      bar.style.width = pct + '%'
+    }, { passive: true })
+  }
+</script>
