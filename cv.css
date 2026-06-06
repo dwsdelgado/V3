@@ -1,0 +1,104 @@
+html {
+  background: #f1f3f4;
+  min-height: 100%;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  color: #222;
+  background: #fff;
+  max-width: 816px;
+  margin: 40px auto;
+  padding: 72px 90px;
+  line-height: 1.5;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+
+h1 {
+  font-size: 26pt;
+  font-weight: bold;
+  margin: 0 0 6px 0;
+}
+
+h2 {
+  font-size: 13pt;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 4px;
+  border: none;           /* elimina cualquier raya del pandoc */
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+p {
+  margin: 2px 0 6px 0;
+}
+
+a {
+  color: #1155cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* viñetas igual que Google Docs */
+ul {
+  list-style: none;       /* quitamos el disc para usar ::before */
+  margin: 2px 0 8px 0;
+  padding-left: 0;
+}
+
+ul ul {
+  margin: 2px 0 2px 0;
+  padding-left: 24px;
+}
+
+li {
+  margin-bottom: 3px;
+  padding-left: 20px;
+  position: relative;
+}
+
+li::before {
+  content: "●";
+  position: absolute;
+  left: 2px;
+  font-size: 0.45em;      /* tamaño exacto del bullet de Google Docs */
+  top: 5px;
+  color: #222;
+}
+
+ul ul li::before {
+  content: "○";
+  font-size: 0.45em;
+  top: 5px;
+}
+
+strong {
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+hr {
+  display: none;
+}
+
+.company-link {
+  text-decoration: underline;
+}
+
+@media print {
+  html { background: #fff; }
+  body {
+    margin: 0;
+    padding: 1in 1in;
+    box-shadow: none;
+    max-width: 100%;
+  }
+}
