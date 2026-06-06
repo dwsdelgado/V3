@@ -59,6 +59,14 @@ function fmtViews(n: number) {
         <Content />
       </div>
 
+      {post.data.tags?.length > 0 && (
+        <div class='post-tags'>
+          {post.data.tags.map((tag: string) => (
+            <span class='tag'>{tag}</span>
+          ))}
+        </div>
+      )}
+
       <footer class='post-footer'>
         <a href="/blog" class="back-link">← Back to blog</a>
         {post.data.github_source && (
@@ -159,6 +167,22 @@ function fmtViews(n: number) {
     display: flex; justify-content: space-between; align-items: center;
     margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.85rem;
   }
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 3rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: #6b7280;
+    background: #f3f4f6;
+    padding: 0.25rem 0.6rem;
+    border-radius: 99px;
+    font-weight: 500;
+  }
+
   .back-link { color: #6b7280; text-decoration: none; }
   .back-link:hover { color: #111; }
   .source-link { color: #2563eb; text-decoration: none; }
