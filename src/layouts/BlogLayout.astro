@@ -42,73 +42,68 @@ const { title = me.fullName, description = me.description } = Astro.props
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    background: #222222;
-    color: #ccc;
+    background: #f5f5f5;
+    color: #111;
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.6;
     min-height: 100vh;
   }
 
-
   .wrapper {
-    max-width: 680px;
-    margin: 1.5rem auto;
-    padding: 2rem 2rem 4rem;
-    background: #1a1a1a;
-    border: 1px solid #2e2e2e;
-    border-radius: 8px;
+    max-width: 720px;
+    margin: 2rem auto;
+    padding: 2.5rem 2.5rem 4rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
   }
 
   header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
   }
 
   .site-name {
     font-weight: 600;
-    font-size: 1.3rem;
-    color: #fff;
+    font-size: 1rem;
+    color: #111;
     text-decoration: none;
-    letter-spacing: -0.02em;
   }
 
-  nav {
-    display: flex;
-    gap: 1.5rem;
-  }
+  .site-name:hover { color: #2563eb; }
 
   nav a {
-    color: #888;
+    color: #6b7280;
     text-decoration: none;
     font-size: 0.875rem;
   }
 
-  nav a:hover {
-    color: #ccc;
-  }
+  nav a:hover { color: #111; }
 
-  /* Scroll progress */
   .scroll-progress {
     position: fixed;
     top: 0;
     left: 0;
-    height: 2px;
+    height: 3px;
     width: 0%;
-    background: #555;
+    background: #2563eb;
     z-index: 9999;
     transition: width 0.1s linear;
   }
 
-  /* Fade-in */
   @keyframes fadein {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .wrapper {
-    animation: fadein 0.35s ease forwards;
+  .wrapper { animation: fadein 0.3s ease forwards; }
+
+  @media (max-width: 600px) {
+    .wrapper { margin: 0; border-radius: 0; border-left: none; border-right: none; padding: 1.5rem 1.25rem 3rem; }
   }
 </style>
 

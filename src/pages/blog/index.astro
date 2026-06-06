@@ -31,72 +31,92 @@ function fmtViews(n: number) {
 ---
 
 <BlogLayout title='Blog — Darwin Delgado'>
+  <h1 class="page-title">Blog</h1>
   <div class='list'>
     {years.map((year) => (
-      byYear[year].map((post, i) => {
-        const slug = post.id.replace(/\.mdx?$/, '')
-        const views = viewsMap[slug] ?? 0
-        return (
-          <div class='row'>
-            <span class='year'>{i === 0 ? year : ''}</span>
-            <a class='title' href={`/blog/${slug}`}>{post.data.title}</a>
-            <span class='views'>{views > 0 ? fmtViews(views) : ''}</span>
-          </div>
-        )
-      })
+      <div class="year-group">
+        <h2 class="year-label">{year}</h2>
+        {byYear[year].map((post) => {
+          const slug = post.id.replace(/\.mdx?$/, '')
+          const views = viewsMap[slug] ?? 0
+          return (
+            <a class='row' href={`/blog/${slug}`}>
+              <span class='title'>{post.data.title}</span>
+              <span class='right'>
+                {views > 0 && <span class='views'>{fmtViews(views)} views</span>}
+                <span class='date'>{post.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              </span>
+            </a>
+          )
+        })}
+      </div>
     ))}
   </div>
 </BlogLayout>
 
 <style>
-  .list {
-    display: flex;
-    flex-direction: column;
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+  }
+
+  .list { display: flex; flex-direction: column; gap: 2rem; }
+
+  .year-group { display: flex; flex-direction: column; }
+
+  .year-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
   }
 
   .row {
-    display: grid;
-    grid-template-columns: 3rem 1fr auto;
+    display: flex;
+    justify-content: space-between;
     align-items: baseline;
-    gap: 0 1rem;
-    padding: 0.45rem 0.5rem;
-    margin: 0 -0.5rem;
-    border-radius: 5px;
+    gap: 1rem;
+    padding: 0.6rem 0.6rem;
+    margin: 0 -0.6rem;
+    border-radius: 6px;
+    text-decoration: none;
     transition: background 0.15s;
-    cursor: pointer;
   }
 
-  .row:hover { background: #252525; }
-  .row:hover .year, .row:hover .views { color: #888; }
-  .row:hover .title { color: #fff; }
-
-  .year {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #888;
-    text-align: left;
-  }
+  .row:hover { background: #f3f4f6; }
 
   .title {
-    font-size: 0.9rem;
-    font-weight: 300;
-    color: #fff;
-    text-decoration: none;
-    letter-spacing: -0.01em;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #111;
+    line-height: 1.4;
   }
 
-  .title:hover { color: #fff; }
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+  }
 
   .views {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #888;
-    text-align: right;
+    font-size: 0.78rem;
+    color: #9ca3af;
+    white-space: nowrap;
+  }
+
+  .date {
+    font-size: 0.78rem;
+    color: #9ca3af;
     white-space: nowrap;
   }
 
   @media (max-width: 600px) {
-    .row { grid-template-columns: 2.5rem 1fr; }
     .views { display: none; }
   }
 </style>
