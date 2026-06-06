@@ -1,4 +1,4 @@
-# Darwin Delgado — Portfolio V2
+# Darwin Delgado — Portfolio V3
 
 <div align="center">
   <img alt="Preview del portafolio" src="public/og-preview.png" width="800" />
