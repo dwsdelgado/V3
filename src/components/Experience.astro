@@ -1,6 +1,5 @@
 ---
 import jobExperience from '@/data/experience.json'
-import me from '@/data/me.json'
 ---
 
 <section id='experience' class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24">
@@ -64,17 +63,6 @@ import me from '@/data/me.json'
     ))}
   </ol>
 
-  <!-- Ver CV -->
-  <a
-    href={me.cvUrl || '#'}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="resume-link inline-flex items-center gap-1 text-sm font-semibold transition-colors duration-200 group"
-    style="color: #e2e8f0"
-  >
-    Ver CV Completo
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline-block h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 ml-1"><path fill-rule="evenodd" d="M5.22 14.78a.75.75 0 001.06 0l7.22-7.22v5.69a.75.75 0 001.5 0v-7.5a.75.75 0 00-.75-.75h-7.5a.75.75 0 000 1.5h5.69l-7.22 7.22a.75.75 0 000 1.06z" clip-rule="evenodd"/></svg>
-  </a>
 
 </section>
 
@@ -90,9 +78,6 @@ import me from '@/data/me.json'
     box-shadow: inset 0 1px 0 0 rgba(148, 163, 184, 0.1);
   }
   .exp-title-link:hover {
-    color: #5eead4 !important;
-  }
-  .resume-link:hover {
     color: #5eead4 !important;
   }
 </style>
