@@ -8,7 +8,7 @@ if (!slug) return Astro.redirect('/blog')
 const post = await getEntry('blog', slug) ?? await getEntry('blog', slug + '.md')
 if (!post || post.data.draft) return Astro.redirect('/blog')
 
-const { Content } = await render(post)
+const { Content, headings } = await render(post)
 
 const kvKey = `views:${slug}`
 const kv: KVNamespace | undefined = (Astro.locals as any)?.runtime?.env?.KV
@@ -23,66 +23,90 @@ if (kv) {
 const wordCount = post.body?.split(/\s+/).filter(Boolean).length ?? 0
 const readingTime = Math.max(1, Math.ceil(wordCount / 200))
 
+const tocHeadings = headings.filter(h => h.depth === 2 || h.depth === 3)
+
 function formatDate(date: Date) {
   return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
-
 
 function fmtViews(n: number) {
   return n.toLocaleString('en-US')
 }
 ---
 
-<BlogLayout title={`${post.data.title} — Darwin Delgado`} description={post.data.description}>
-  <article>
-    <h1>{post.data.title}</h1>
+<BlogLayout title={`${post.data.title} — Darwin Delgado`} description={post.data.description} wide={tocHeadings.length > 0}>
+  <div class="post-layout">
+    <article>
+      <h1>{post.data.title}</h1>
 
-    <p class="posted-date">Posted {formatDate(post.data.date)}</p>
+      <p class="posted-date">Posted {formatDate(post.data.date)}</p>
 
-    <div class="author-row">
-      <img
-        src={`https://github.com/dwsdelgado.png?size=64`}
-        alt="Darwin Delgado"
-        class="avatar"
-        width="36"
-        height="36"
-      />
-      <div class="author-info">
-        <a href="https://github.com/dwsdelgado" target="_blank" rel="noopener" class="author-name">Darwin Delgado</a>
-        <span class="author-meta">{readingTime} min read{views > 0 ? ` · ${fmtViews(views)} views` : ''}</span>
+      <div class="author-row">
+        <img
+          src={`https://github.com/dwsdelgado.png?size=64`}
+          alt="Darwin Delgado"
+          class="avatar"
+          width="36"
+          height="36"
+        />
+        <div class="author-info">
+          <a href="https://github.com/dwsdelgado" target="_blank" rel="noopener" class="author-name">Darwin Delgado</a>
+          <span class="author-meta">{readingTime} min read{views > 0 ? ` · ${fmtViews(views)} views` : ''}</span>
+        </div>
       </div>
-    </div>
 
-    <div class='body'>
-      <Content />
-    </div>
+      <div class='body'>
+        <Content />
+      </div>
 
-    <footer class='post-footer'>
-      <a href="/blog" class="back-link">← Back to blog</a>
-      {post.data.github_source && (
-        <a href={post.data.github_source} target='_blank' rel='noopener' class='source-link'>View source ↗</a>
-      )}
-    </footer>
-  </article>
+      <footer class='post-footer'>
+        <a href="/blog" class="back-link">← Back to blog</a>
+        {post.data.github_source && (
+          <a href={post.data.github_source} target='_blank' rel='noopener' class='source-link'>View source ↗</a>
+        )}
+      </footer>
+    </article>
+
+    {tocHeadings.length > 0 && (
+      <aside class="toc">
+        <div class="toc-inner">
+          <p class="toc-title">Table of contents</p>
+          <nav>
+            {tocHeadings.map(h => (
+              <a
+                href={`#${h.slug}`}
+                class={`toc-link toc-link--h${h.depth}`}
+                data-heading={h.slug}
+              >
+                {h.text}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </aside>
+    )}
+  </div>
 </BlogLayout>
 
 <style>
-  article { color: #374151; }
+  .post-layout {
+    display: grid;
+    grid-template-columns: 1fr 240px;
+    gap: 3rem;
+  }
+
+  article { color: #374151; min-width: 0; align-self: start; }
 
   h1 {
-    font-size: 2.25rem;
+    font-size: 2.5rem;
     font-weight: 700;
     color: #111;
     margin-bottom: 0.75rem;
-    line-height: 1.2;
+    line-height: 1.15;
     letter-spacing: -0.02em;
   }
 
-  .posted-date {
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 1.5rem;
-  }
+  .posted-date { font-size: 0.9rem; color: #6b7280; margin-bottom: 1.5rem; }
 
   .author-row {
     display: flex;
@@ -93,34 +117,14 @@ function fmtViews(n: number) {
     border-bottom: 1px solid #f0f0f0;
   }
 
-  .avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .author-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-  }
-
-  .author-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #2563eb;
-    text-decoration: none;
-  }
+  .avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+  .author-info { display: flex; flex-direction: column; gap: 0.1rem; }
+  .author-name { font-size: 0.9rem; font-weight: 600; color: #2563eb; text-decoration: none; }
   .author-name:hover { text-decoration: underline; }
-
-  .author-meta {
-    font-size: 0.78rem;
-    color: #9ca3af;
-  }
+  .author-meta { font-size: 0.78rem; color: #9ca3af; }
 
   .body :global(p) { margin-bottom: 1.25rem; line-height: 1.8; color: #374151; }
-  .body :global(h2) { font-size: 1.3rem; font-weight: 700; color: #111; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
+  .body :global(h2) { font-size: 1.35rem; font-weight: 700; color: #111; margin: 2.5rem 0 0.75rem; letter-spacing: -0.01em; }
   .body :global(h3) { font-size: 1.1rem; font-weight: 600; color: #1f2937; margin: 2rem 0 0.5rem; }
   .body :global(a) { color: #2563eb; text-decoration: underline; }
   .body :global(a:hover) { color: #1d4ed8; }
@@ -143,39 +147,50 @@ function fmtViews(n: number) {
   .body :global(hr) { border: none; border-top: 1px solid #e5e7eb; margin: 2rem 0; }
 
   .body :global(.copy-btn) {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: #2d2d3f;
-    border: none;
-    color: #9ca3af;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color 0.15s, background 0.15s;
+    position: absolute; top: 0.5rem; right: 0.5rem;
+    background: #2d2d3f; border: none; color: #9ca3af;
+    font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px;
+    cursor: pointer; font-family: inherit; transition: color 0.15s, background 0.15s;
   }
   .body :global(.copy-btn:hover) { color: #fff; background: #3d3d4f; }
   .body :global(.copy-btn.copied) { color: #6ee7b7; }
 
   .post-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 4rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e5e7eb;
-    font-size: 0.85rem;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb; font-size: 0.85rem;
   }
-
   .back-link { color: #6b7280; text-decoration: none; }
   .back-link:hover { color: #111; }
   .source-link { color: #2563eb; text-decoration: none; }
   .source-link:hover { text-decoration: underline; }
 
+  /* TOC */
+  .toc { min-width: 0; }
+  .toc-inner {
+    position: sticky;
+    top: 4rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .toc-title { font-size: 0.8rem; font-weight: 700; color: #111; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
+  .toc-link {
+    display: block; font-size: 0.82rem; color: #6b7280; text-decoration: none;
+    padding: 0.25rem 0; line-height: 1.4; border-left: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .toc-link--h3 { padding-left: 0.75rem; }
+  .toc-link:hover { color: #2563eb; }
+  .toc-link.active { color: #2563eb; border-left-color: #2563eb; padding-left: 0.5rem; }
+  .toc-link--h3.active { padding-left: 1.25rem; }
+
+  @media (max-width: 900px) {
+    .post-layout { grid-template-columns: 1fr; }
+    .toc { display: none; }
+    h1 { font-size: 1.8rem; }
+  }
   @media (max-width: 600px) {
-    h1 { font-size: 1.6rem; }
+    h1 { font-size: 1.5rem; }
     .post-footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
   }
 </style>
@@ -190,11 +205,23 @@ function fmtViews(n: number) {
       await navigator.clipboard.writeText(code)
       btn.textContent = 'Copied!'
       btn.classList.add('copied')
-      setTimeout(() => {
-        btn.textContent = 'Copy'
-        btn.classList.remove('copied')
-      }, 2000)
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied') }, 2000)
     })
     pre.appendChild(btn)
   })
+
+  const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link')
+  if (tocLinks.length > 0) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const link = document.querySelector<HTMLElement>(`.toc-link[data-heading="${entry.target.id}"]`)
+        if (link) link.classList.toggle('active', entry.isIntersecting)
+      })
+    }, { rootMargin: '0px 0px -60% 0px', threshold: 0 })
+
+    tocLinks.forEach(l => {
+      const el = document.getElementById(l.dataset.heading ?? '')
+      if (el) observer.observe(el)
+    })
+  }
 </script>

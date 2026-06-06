@@ -4,8 +4,9 @@ import me from '@/data/me.json'
 interface Props {
   title?: string
   description?: string
+  wide?: boolean
 }
-const { title = me.fullName, description = me.description } = Astro.props
+const { title = me.fullName, description = me.description, wide = false } = Astro.props
 ---
 
 <!doctype html>
@@ -24,7 +25,7 @@ const { title = me.fullName, description = me.description } = Astro.props
   </head>
   <body>
     <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="wrapper">
+    <div class={`wrapper${wide ? ' wrapper--wide' : ''}`}>
       <header>
         <a href="/blog" class="site-name">{me.fullName}</a>
         <nav>
@@ -51,7 +52,7 @@ const { title = me.fullName, description = me.description } = Astro.props
   }
 
   .wrapper {
-    max-width: 720px;
+    max-width: 760px;
     margin: 2rem auto;
     padding: 2.5rem 2.5rem 4rem;
     background: #fff;
@@ -59,12 +60,14 @@ const { title = me.fullName, description = me.description } = Astro.props
     border-radius: 10px;
   }
 
+  .wrapper--wide { max-width: 1100px; }
+
   header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid #f0f0f0;
   }
 

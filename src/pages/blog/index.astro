@@ -31,7 +31,6 @@ function fmtViews(n: number) {
 ---
 
 <BlogLayout title='Blog — Darwin Delgado'>
-  <h1 class="page-title">Blog</h1>
   <div class='list'>
     {years.map((year) => (
       <div class="year-group">
@@ -55,14 +54,6 @@ function fmtViews(n: number) {
 </BlogLayout>
 
 <style>
-  .page-title {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 2rem;
-    letter-spacing: -0.02em;
-  }
-
   .list { display: flex; flex-direction: column; gap: 2rem; }
 
   .year-group { display: flex; flex-direction: column; }
